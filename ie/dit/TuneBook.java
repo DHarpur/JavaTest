@@ -25,38 +25,49 @@ public class TuneBook
    			StringBuffer notation = new StringBuffer();
    			int x;
    			int count = 1;
+   			boolean done = false;
+   			int xCounter = 1;
    	 		while ((l = inputStream.readLine()) != null) 
     		{
     			Tune t = new Tune();
-    			while(l != "\n" && l != null)
+    			while(l != null && !done)
     			{
 	        		if(l.startsWith("X:"))
 	        		{
 	        			x = Integer.parseInt(l.substring(2), 10);
 	        			t.setX(x);
+	        			xCounter++;
 	        		}
-	        		else if(l.startsWith("T:") && count == 1)
-	        		{
-	        			title = l.substring(2);
-	        			count++;
-	        			t.setTitle(title);
-	        		}
-	        		else if(l.startsWith("T:") && count == 2)
+	        		if(l.startsWith("T:") && count == 1)
+		        	{
+		        		title = l.substring(2);
+		        		count++;
+		        		t.setTitle(title);
+		        	}
+	        		if(l.startsWith("T:") && count == 2)
 	        		{
 	        			altTitle = l.substring(2);
 	        			t.setAltTitle(altTitle);
 	        		}
-	        		else
+	        		else if(xCounter == 2)
 	        		{
-	        			notation.append(l);
-	        			
+	        			notation.append(l);	
+        			}
+        			if(l.startsWith("X:") && xCounter == 2)
+        			{
+        				done = true;
+        				t.setNotation(notation.toString());
         			}
         			l = inputStream.readLine();
+
+
         		}
         		//t = new Tune(x, title, altTitle, notation.toString());
         		count = 1;
-        		t.setNotation(notation.toString());
+        		
         		tunes.add(t);
+        		done = false;
+        		xCounter = 1;
     		}
 		}
 		catch (IOException e)
@@ -108,7 +119,6 @@ public class TuneBook
         System.out.println(tb);
 
         Tune t = tb.findTune("Scotsman over the Border");
-        if(t != null)
-        	t.play();
+       	t.play();
     }
 }
