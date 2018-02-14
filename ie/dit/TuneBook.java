@@ -28,33 +28,34 @@ public class TuneBook
    	 		while ((l = inputStream.readLine()) != null) 
     		{
     			Tune t = new Tune();
-        		if(l.startsWith("X:"))
-        		{
-        			//Integer i = getInteger();
-        			x = Integer.parseInt(l.substring(2), 10);
-        			t.setX(x);
-        		}
-        		else if(l.startsWith("T:") && count == 1)
-        		{
-        			title = l.substring(2);
-        			count++;
-        			t.setTitle(title);
-        		}
-        		else if(l.startsWith("T:") && count == 2)
-        		{
-        			altTitle = l.substring(2);
-        			t.setAltTitle(altTitle);
-        		}
-        		else if(l.startsWith("R:"))
-        		{
-        			while(!((l = inputStream.readLine()).startsWith("X")) && l != null)
-        			{
-        				notation.append(l);
+    			while(l != "\n" && l != null)
+    			{
+	        		if(l.startsWith("X:"))
+	        		{
+	        			x = Integer.parseInt(l.substring(2), 10);
+	        			t.setX(x);
+	        		}
+	        		else if(l.startsWith("T:") && count == 1)
+	        		{
+	        			title = l.substring(2);
+	        			count++;
+	        			t.setTitle(title);
+	        		}
+	        		else if(l.startsWith("T:") && count == 2)
+	        		{
+	        			altTitle = l.substring(2);
+	        			t.setAltTitle(altTitle);
+	        		}
+	        		else
+	        		{
+	        			notation.append(l);
+	        			
         			}
-        			t.setNotation(notation.toString());
+        			l = inputStream.readLine();
         		}
         		//t = new Tune(x, title, altTitle, notation.toString());
         		count = 1;
+        		t.setNotation(notation.toString());
         		tunes.add(t);
     		}
 		}
@@ -76,6 +77,7 @@ public class TuneBook
     		}
 		}
 	}
+	
 
 	public String toString()
 	{
